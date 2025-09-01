@@ -670,6 +670,7 @@ jobs:
         run: |
           yum update -y
           yum install -y git gcc gcc-c++ make cmake libcurl-devel
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Checkout
         uses: actions/checkout@v4

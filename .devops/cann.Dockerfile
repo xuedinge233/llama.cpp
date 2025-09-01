@@ -3,7 +3,8 @@
 # ==============================================================================
 
 # Define the CANN base image for easier version updates later
-ARG CANN_BASE_IMAGE=quay.io/ascend/cann:8.1.rc1-910b-openeuler22.03-py3.10
+ARG CHIP_TYPE=910b
+ARG CANN_BASE_IMAGE=quay.io/ascend/cann:8.1.rc1-${CHIP_TYPE}-openeuler22.03-py3.10
 
 # ==============================================================================
 # BUILD STAGE
@@ -12,7 +13,15 @@ ARG CANN_BASE_IMAGE=quay.io/ascend/cann:8.1.rc1-910b-openeuler22.03-py3.10
 FROM ${CANN_BASE_IMAGE} AS build
 
 # Define the Ascend chip model for compilation. Default is Ascend910B3
-ARG ASCEND_SOC_TYPE=Ascend910B3
+ARG ASCEND_SOC_TYPE
+RUN if [ "${CHIP_TYPE}" = "310p" ]; then \
+        echo "ASCEND_SOC_TYPE=Ascend310P4" > /tmp/soc_type; \
+    else \
+        echo "ASCEND_SOC_TYPE=Ascend910B3" > /tmp/soc_type; \
+    fi && \
+    if [ -z "${ASCEND_SOC_TYPE}" ]; then \
+        export ASCEND_SOC_TYPE=$(cat /tmp/soc_type | cut -d'=' -f2); \
+    fi
 
 # -- Install build dependencies --
 RUN yum install -y gcc g++ cmake make git libcurl-devel python3 python3-pip && \

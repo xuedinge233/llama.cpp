@@ -15,7 +15,7 @@ FROM ${CANN_BASE_IMAGE} AS build
 # Define the Ascend chip model for compilation. Default is Ascend910B3
 ARG ASCEND_SOC_TYPE
 RUN if [ "${CHIP_TYPE}" = "310p" ]; then \
-        echo "ASCEND_SOC_TYPE=Ascend310P4" > /tmp/soc_type; \
+        echo "ASCEND_SOC_TYPE=Ascend310P3" > /tmp/soc_type; \
     else \
         echo "ASCEND_SOC_TYPE=Ascend910B3" > /tmp/soc_type; \
     fi && \

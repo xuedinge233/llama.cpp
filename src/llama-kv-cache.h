@@ -19,8 +19,6 @@ struct llama_context;
 
 class llama_kv_cache : public llama_memory_i {
 public:
-    static uint32_t get_padding(const llama_cparams & cparams);
-
     struct stream_copy_info {
         bool empty() const {
             assert(ssrc.size() == sdst.size());
@@ -121,6 +119,8 @@ public:
     llama_pos seq_pos_min(llama_seq_id seq_id) const override;
     llama_pos seq_pos_max(llama_seq_id seq_id) const override;
 
+    std::map<ggml_backend_buffer_type_t, size_t> memory_breakdown() const override;
+
     // state write/load
 
     void state_write(llama_io_write_i & io, llama_seq_id seq_id = -1, llama_state_seq_flags flags = 0) const override;
@@ -212,10 +212,11 @@ private:
     // env: LLAMA_KV_CACHE_DEBUG
     int debug = 0;
 
+    // this is the SWA type of the cache - not to be confused with the model SWA type
     const llama_swa_type swa_type = LLAMA_SWA_TYPE_NONE;
 
-    std::vector<ggml_context_ptr>        ctxs;
-    std::vector<ggml_backend_buffer_ptr> bufs;
+    // ggml contexts for the KV cache along with the allocated backend buffers:
+    std::vector<std::pair<ggml_context_ptr, ggml_backend_buffer_ptr>> ctxs_bufs;
 
     // the current index from where we start searching for a free slot in the ring buffer of KV cells (see find_slot())
     // note: this is not part of the KV state and it's only used to speed-up the find_slot() method
@@ -316,9 +317,17 @@ public:
     ggml_tensor * get_v(ggml_context * ctx, int32_t il) const;
 
     // store k_cur and v_cur in the cache based on the provided head location
+    // note: the heads in k_cur and v_cur should be layed out contiguously in memory
+    //   - k_cur  [n_embd_head_k, n_head_k, n_tokens]
+    //   - k_idxs [n_tokens]
+    //   - v_cur  [n_embd_head_v, n_head_v, n_tokens]
+    //   - v_idxs [n_tokens] or [n_tokens*n_embd_v_gqa] depending if V cache is transposed
     ggml_tensor * cpy_k(ggml_context * ctx, ggml_tensor * k_cur, ggml_tensor * k_idxs, int32_t il) const;
     ggml_tensor * cpy_v(ggml_context * ctx, ggml_tensor * v_cur, ggml_tensor * v_idxs, int32_t il) const;
 
+    // create destination indices for each head of the current batch for where it would be written in the KV cache
+    // the indices address the global KV cache (not per stream) - this is not relevant for the user of this API, but
+    //   helps understand the implementation logic of cpy_k and cpy_v
     ggml_tensor * build_input_k_idxs(ggml_context * ctx, const llama_ubatch & ubatch) const;
     ggml_tensor * build_input_v_idxs(ggml_context * ctx, const llama_ubatch & ubatch) const;
 

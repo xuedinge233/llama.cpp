@@ -4,23 +4,13 @@
 
 # Define the CANN base image for easier version updates later
 ARG CHIP_TYPE=910b
-ARG CANN_BASE_IMAGE=quay.io/ascend/cann:8.1.rc1-${CHIP_TYPE}-openeuler22.03-py3.10
+ARG CANN_BASE_IMAGE=quay.io/ascend/cann:8.3.rc1.alpha001-${CHIP_TYPE}-openeuler22.03-py3.11
 
 # ==============================================================================
 # BUILD STAGE
 # Compile all binary files and libraries
 # ==============================================================================
 FROM ${CANN_BASE_IMAGE} AS build
-
-# Define the Ascend chip model for compilation. Default is Ascend910B3
-ARG ASCEND_SOC_TYPE
-ARG CHIP_TYPE
-
-RUN if [ "${CHIP_TYPE}" = "310p" ]; then \
-        echo "Ascend310P3" > /tmp/soc_type; \
-    else \
-        echo "Ascend910B3" > /tmp/soc_type; \
-    fi
 
 # -- Install build dependencies --
 RUN yum install -y gcc g++ cmake make git libcurl-devel python3 python3-pip && \
@@ -45,8 +35,13 @@ ENV LD_LIBRARY_PATH=${ASCEND_TOOLKIT_HOME}/runtime/lib64/stub:$LD_LIBRARY_PATH
 
 # -- Build llama.cpp --
 # Use the passed ASCEND_SOC_TYPE argument and add general build options
-RUN if [ -z "${ASCEND_SOC_TYPE}" ]; then \
-        ASCEND_SOC_TYPE=$(cat /tmp/soc_type); \
+ARG CHIP_TYPE
+ARG ASCEND_SOC_TYPE
+
+RUN if [ "${CHIP_TYPE}" = "310p" ]; then \
+        ASCEND_SOC_TYPE=Ascend310P3; \
+    else \
+        ASCEND_SOC_TYPE=Ascend910B3; \
     fi && \
     source /usr/local/Ascend/ascend-toolkit/set_env.sh --force \
     && \

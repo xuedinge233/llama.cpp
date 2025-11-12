@@ -275,7 +275,7 @@ Instructions for adding support for new models: [HOWTO-add-model.md](docs/develo
 | [CUDA](docs/build.md#cuda) | Nvidia GPU | null |
 | [HIP](docs/build.md#hip) | AMD GPU | null |
 | [Vulkan](docs/build.md#vulkan) | GPU | null |
-| [CANN](docs/build.md#cann) | Ascend NPU | [![CANN](https://github.com/Ascend/Ascend-CI/blob/main/.github/workflows/%20llamacpp_test.yml/badge.svg?branch=main)](https://github.com/Ascend/Ascend-CI/blob/main/.github/workflows/%20llamacpp_test.yml) |
+| [CANN](docs/build.md#cann) | Ascend NPU | [![CANN](https://github.com/Ascend/Ascend-CI/actions/workflows/llamacpp_test.yaml/badge.svg?branch=main)](https://github.com/Ascend/Ascend-CI/actions/workflows/llamacpp_test.yaml) |
 | [OpenCL](docs/backend/OPENCL.md) | Adreno GPU | null |
 | [IBM zDNN](docs/backend/zDNN.md) | IBM Z & LinuxONE | null |
 | [WebGPU [In Progress]](docs/build.md#webgpu) | All | null |

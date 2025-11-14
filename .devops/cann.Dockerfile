@@ -34,21 +34,14 @@ ENV LD_LIBRARY_PATH=${ASCEND_TOOLKIT_HOME}/runtime/lib64/stub:$LD_LIBRARY_PATH
 # For brevity, only core variables are listed here. You can paste the original ENV list here.
 
 # -- Build llama.cpp --
-# Use the passed ASCEND_SOC_TYPE argument and add general build options
-ARG CHIP_TYPE
-ARG ASCEND_SOC_TYPE
-
-RUN if [ "${CHIP_TYPE}" = "310p" ]; then \
-        ASCEND_SOC_TYPE=Ascend310P3; \
-    else \
-        ASCEND_SOC_TYPE=Ascend910B3; \
-    fi && \
-    source /usr/local/Ascend/ascend-toolkit/set_env.sh --force \
+# Use the passed CHIP_TYPE argument and add general build options
+ARG CHIP_TYPE=310p
+RUN source /usr/local/Ascend/ascend-toolkit/set_env.sh --force \
     && \
     cmake -B build \
         -DGGML_CANN=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        -DSOC_TYPE=${ASCEND_SOC_TYPE} \
+        -DSOC_TYPE=ascend${CHIP_TYPE} \
         . && \
     cmake --build build --config Release -j$(nproc)
 

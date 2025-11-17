@@ -35,7 +35,7 @@ ENV LD_LIBRARY_PATH=${ASCEND_TOOLKIT_HOME}/runtime/lib64/stub:$LD_LIBRARY_PATH
 
 # -- Build llama.cpp --
 # Use the passed CHIP_TYPE argument and add general build options
-ARG CHIP_TYPE=310p
+ARG CHIP_TYPE
 RUN source /usr/local/Ascend/ascend-toolkit/set_env.sh --force \
     && \
     cmake -B build \

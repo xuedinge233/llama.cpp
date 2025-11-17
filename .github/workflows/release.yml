@@ -731,7 +731,7 @@ jobs:
       - name: Pack artifacts
         run: |
           cp LICENSE ./build/bin/
-          zip -r llama-${{ steps.tag.outputs.name }}-bin-${{ matrix.device }}-openeuler-${{ matrix.arch }}.zip ./build/bin/*
+          zip -r llama-${{ steps.tag.outputs.name }}-bin-${{ matrix.device }}-openEuler-${{ matrix.arch }}.zip ./build/bin/*
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

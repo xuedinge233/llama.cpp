@@ -770,9 +770,9 @@ jobs:
           docker run --rm \
             -v "${PWD}:/workspace" \
             -w /workspace \
-            "${{ steps.cann-image.outputs.image }}" \
             -e SOC_TYPE=${SOC_TYPE} \
             -e BUILD_TYPE=${BUILD_TYPE} \
+            "${{ steps.cann-image.outputs.image }}" \
             bash -lc '
               set -e
               yum install -y --setopt=install_weak_deps=False --setopt=tsflags=nodocs git gcc gcc-c++ make cmake libcurl-devel

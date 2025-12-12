@@ -745,10 +745,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Free disk space
-        run: |
-          sudo rm -rf /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/lib/android /opt/hostedtoolcache/go
-          sudo docker system prune -af || true
+      - name: Free up disk space
+        uses: jlumbroso/free-disk-space
+        with:
+          tool-cache: true
+          docker-images: false
 
       - name: Set container image
         id: cann-image
@@ -787,6 +788,7 @@ jobs:
 
               chown -R '"${HOST_UID}"':'"${HOST_GID}"' /workspace/build
             '
+
       - name: Determine tag name
         id: tag
         uses: ./.github/actions/get-tag-name

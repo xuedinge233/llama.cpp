@@ -731,7 +731,7 @@ jobs:
           path: llama-${{ steps.tag.outputs.name }}-xcframework.tar.gz
           name: llama-${{ steps.tag.outputs.name }}-xcframework.tar.gz
 
-    
+
   openEuler-cann:
     strategy:
       matrix:

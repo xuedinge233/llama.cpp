@@ -746,7 +746,7 @@ jobs:
           fetch-depth: 0
 
       - name: Free up disk space
-        uses: jlumbroso/free-disk-space
+        uses: jlumbroso/free-disk-space@main
         with:
           tool-cache: true
           docker-images: false

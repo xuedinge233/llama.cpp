@@ -1400,7 +1400,7 @@ jobs:
         chip_type: ['910b', '310p']
         build: ['Release']
     runs-on: ${{ matrix.arch == 'aarch64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
-    container: ascendai/cann:${{ matrix.chip_type == '910b' &&  '8.3.rc1.alpha001-910b-openeuler22.03-py3.11' || '8.2.rc1-310p-openeuler22.03-py3.11' }}
+    container: ascendai/cann:${{ matrix.chip_type == '910b' &&  '8.3.rc2-910b-openeuler24.03-py3.11' || '8.3.rc2-310p-openeuler24.03-py3.11' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
